@@ -33,15 +33,13 @@ exports.get = async (req, res) => {
             await Task.findAll({
                 where: { userid: users[key].id}
             }).then((data) =>{
-                if (data.length) {
-                    tasks.push({
-                            user: users[key],
-                            tasks: data.map((r) => {
-                                return r.dataValues;
-                            })
-                        }
-                    )
-                }
+                tasks.push({
+                        user: users[key],
+                        tasks: data.map((r) => {
+                            return r.dataValues;
+                        })
+                    }
+                )
             })
         }
         if (tasks){
@@ -80,9 +78,7 @@ exports.updateTaskState = async (req, res) => {
             where: { id: taskId },
         });
         if (foundTask === null) {
-            res.status(400).send({
-                message : 'No task with that id in the database.'
-            });
+            res.status(400).send('No task with that id in the database.');
         }else{
             await foundTask.update({ state: !foundTask.state})
                 .catch(err => {
@@ -100,17 +96,37 @@ exports.updateTaskState = async (req, res) => {
     }
 };
 
+exports.updateTask = async (req, res) => {
+    let taskId = req.params.taskid;
+    if(taskId) {
+        const foundTask = await Task.findOne({
+            where: { id: taskId },
+        });
+        if (foundTask === null) {
+            res.status(400).send('No task with that id in the database.');
+        }else{
+            await foundTask.update({ description: req.body.description})
+                .catch(err => {
+                    res.status(400).send(err);
+                });
+
+            await foundTask.save().then(() => {
+                res.status(201).send({
+                    msg: 'Task description updated'
+                });
+            })
+        }
+    }
+};
+
 exports.add = async (req, res) => {
     let userId = req.params.userid;
-    console.log(req.body)
     if(userId) {
         const foundUser =  User.findOne({
             where: { id: userId },
         });
         if (foundUser === null) {
-            res.status(400).send({
-                message : 'No user with that id in the database.'
-            });
+            res.status(400).send('No user with that id in the database.');
         }else{
              await Task.create({ description: req.body.description, state: 0, userid: userId })
                  .then(() => {

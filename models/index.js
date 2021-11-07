@@ -12,6 +12,7 @@ const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
         acquire: dbConfig.pool.acquire,
         idle: dbConfig.pool.idle
     },
+    logging:false
 });
 
 const db = {};
@@ -31,19 +32,6 @@ db.task.belongsTo(db.user,{
     foreignKey: 'userid',
     targetKey: 'id' ,
     foreignKeyConstraint: true
-});
-
-sequelize.sync().then(() => {
-    db.user.create({
-        name: 'test123',
-        image: '1.png'
-    }).then((user) => {
-        db.task.create({
-            description: 'test task to be done',
-            state: false,
-            userid: user.id
-        })
-    })
 });
 
 module.exports = db;

@@ -33,8 +33,11 @@
                               @input="setTaskState(singleTask.id)">
                   </b-checkbox>
                 </b-field>
-                <div aria-hidden="true" class="textarea-container">
-                  <textarea rows="1" class="" spellcheck="false" v-model="singleTask.description"></textarea></div>
+                <div class="textarea-container">
+                  <b-field>
+                    <b-input class="tasks-container" v-model="singleTask.description"  @keyup.native.enter="updateTask($event,singleTask)"></b-input>
+                  </b-field>
+                </div>
                 <div @click="deleteTask(singleTask.id)" type="button" class="delete-button" style="margin-top: -1px; cursor:pointer">
                   <font-awesome-icon icon="minus-square" color="#90c1d7"/>
                 </div>
@@ -99,21 +102,42 @@ export default {
         }
       }
     },
+    async updateTask(evt,singleTask){
+      evt.target.blur()
+      singleTask.visible = false;
+      if (evt.target.value !== '') {
+        const response = await services.updateTask(singleTask.id, {description: evt.target.value})
+        if (response.status === 200 || response.status === 201 ) {
+          if (this.id) {
+            await this.getTasksUser(this.id)
+
+          } else {
+            await this.getTasks()
+          }
+        }
+      }
+    },
     async getTasks(){
       const response  = await services.getTasks()
-      console.log(response)
-      if (response.status) {
-        this.tasks = response.data;
+      if (response.status === 200) {
+        this.tasks = response.data.map(task => {
+          task.tasks.visible = true;
+          return task;
+        })
       }
 
     },
     async getTasksUser(userId){
       const response  = await services.getTasksByUserId(userId)
-      this.tasks = response.data;
+      if (response.status === 200) {
+        this.tasks = response.data.map(task => {
+          task.tasks.visible = true;
+          return task;
+        })
+      }
     },
     async deleteTask(taskid){
       const response  = await services.deleteTask(taskid)
-      console.log(response)
       if (response.status === 200 || response.status === 201 ) {
         if (this.id) {
           await this.getTasksUser(this.id)
@@ -122,6 +146,10 @@ export default {
         }
       }
 
+    },
+    showText(singleTask){
+      console.log(singleTask)
+      singleTask.visible = true;
     }
 
   },
@@ -321,5 +349,9 @@ export default {
 .completed{
   text-decoration: line-through;
   opacity: 0.6;
+}
+
+.border{
+  border: none;
 }
 </style>

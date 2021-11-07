@@ -1,14 +1,16 @@
 # To do App
-
+````
+Follow steps below to run application
+````
 ## Project setup
 ```
-npm install
+npm install from root folder
 ```
 
 ## Create Env file in root folder
 ```
-Set up env variables for DB example
-
+Set up env variables for DB (MySQL) 
+Example
 DB_HOST='127.0.0.1'
 DB_PORT='3306'
 DB_NAME='tasks'
@@ -22,9 +24,16 @@ DB_PASS=
 npm run start
 ```
 
-### Compiles front end work and minifies for production
+### Compile front build
 ```
 cd front
 npm install
 npm run build
+This will store it in a dist folder that the server will access and display
+```
+
+### To run some tests on the api
+```
+From root folder
+Do npm test to test with jest
 ```

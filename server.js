@@ -17,17 +17,36 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const db = require('./models');
-db.sequelize.sync();
+db.sequelize.sync().then(async () => {
+    const foundUser = await db.user.findOne({
+        where: {name: 'test123'}
+    })
+    if(!foundUser){
+        await db.user.create({
+            name: 'test123',
+            image: '1.png'
+        }).then(async (user) => {
+            await db.task.create({
+                description: 'test task to be done',
+                state: false,
+                userid: user.id
+            })
+        })
+    }
+});
 
 app.use("/api/users", usersRouter);
 app.use("/api/tasks", tasksRouter);
-//here we are configuring dist to serve app files
+
 app.use('/', serveStatic(path.join(__dirname, '/front/dist')))
 
 app.get(/.*/, function (req, res) {
     res.sendFile(path.join(__dirname, 'front/dist/index.html'))
 })
 
-app.listen(port)
-console.log(`app is listening on port: ${port}`)
+if (process.env.NODE_ENV !== 'test') {
+    app.listen(port, () => console.log(`Listening on port: ${port}`));
+}
+
+module.exports  = app
 
