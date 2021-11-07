@@ -13,16 +13,17 @@
           <div class="content">
             <h1 style="text-transform: capitalize;">{{ user.name }}</h1>
           </div>
-          <div class="profile-card-overflow-menu">
-            <b-dropdown aria-role="list">
-              <template #trigger="{ active }">
-                <font-awesome-icon class="ellipsis" icon="ellipsis-v" :icon-right="active ? 'menu-up' : 'menu-down'"/>
-              </template>
-              <b-dropdown-item @click="updateModel(user)" aria-role="listitem">Update User</b-dropdown-item>
-              <b-dropdown-item @click="confirmCustomDelete(user)" aria-role="listitem">Delete User</b-dropdown-item>
-              <b-dropdown-item @click="viewTasks(user)" aria-role="listitem">View Tasks</b-dropdown-item>
-            </b-dropdown>
-          </div>
+          <b-dropdown aria-role="list" position="is-bottom-left">
+            <template #trigger="{ active }">
+              <div class="profile-card-menu" :icon-right="active ? 'menu-up' : 'menu-down'" >
+                    <font-awesome-icon class="ellipsis" icon="ellipsis-v"/>
+              </div>
+                </template>
+                <b-dropdown-item @click="updateModel(user)" aria-role="listitem">Update User</b-dropdown-item>
+                <b-dropdown-item @click="confirmCustomDelete(user)" aria-role="listitem">Delete User</b-dropdown-item>
+                <b-dropdown-item @click="viewTasks(user)" aria-role="listitem">View Tasks</b-dropdown-item>
+
+          </b-dropdown>
         </div>
       </div>
     </div>
@@ -84,7 +85,6 @@ export default {
       if (res.data) {
         this.users = res.data
       }
-      console.log(this.users)
     },
     confirmCustomDelete(user) {
       this.$buefy.dialog.confirm({
@@ -99,7 +99,7 @@ export default {
             this.$buefy.toast.open('Account deleted!')
             await this.getUsers();
           }else{
-            this.$buefy.toast.open('There was an error. Please try again later')
+            this.$buefy.toast.open(response.data)
           }
 
         }
@@ -113,22 +113,19 @@ export default {
     addModel() {
       this.isCardModalAddActive = true;
     },
-    updateUser() {
-      this.isLoading = true;
-      setTimeout(async () => {
-        const response = await service.updateUser(this.selectedUser.id, { name: this.selectedUser.name} )
-        if (response.status === 200 || response.status === 201 ){
-          this.$buefy.toast.open({
-            message: 'User updated successfully',
-            type: 'is-success'
-          })
-          await this.getUsers();
-        }else{
-          this.$buefy.toast.open('There was an error. Please try again later')
-        }
-        this.isLoading = false;
-        this.isCardModalActive = false;
-      }, 2000)
+    async updateUser() {
+      const response = await service.updateUser(this.selectedUser.id, { name: this.selectedUser.name})
+      if (response.status === 200 || response.status === 201 ){
+        this.$buefy.toast.open({
+          message: 'User updated successfully',
+          type: 'is-success'
+        })
+        await this.getUsers();
+      }else{
+        this.$buefy.toast.open(response.data)
+      }
+      this.isCardModalActive = false;
+
     },
     async addUser(){
       const response = await service.addUser(this.newUser)
@@ -137,11 +134,11 @@ export default {
           message: 'Account added!',
           type: 'is-success'
         })
-        this.isCardModalAddActive = false;
         await this.getUsers();
       }else{
-        this.$buefy.toast.open('There was an error. Please try again later')
+        this.$buefy.toast.open(response.data)
       }
+      this.isCardModalAddActive = false;
     },
     viewTasks(user) {
       this.$router.push({name: 'tasks', params: {id: user.id}});
@@ -223,16 +220,27 @@ export default {
   margin: 0
 }
 
-.profile-card-overflow-menu {
+.profile-card-menu {
+  width: 30px;
   position: relative;
   display: flex;
-  -webkit-box-align: center;
   align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 25px;
+  transition: all 0.2s ease 0s;
+  :hover{
+    background-color: rgb(242, 242, 242);
+  }
+}
+.profile-card-menu:hover{
+  background-color: rgb(242, 242, 242);
+}
+.ellipsis :hover{
+  opacity: 0.9;
 }
 
-.ellipsis {
-  cursor: pointer;
-}
 .content:not(:last-child){
   margin-bottom: 0;
 }
