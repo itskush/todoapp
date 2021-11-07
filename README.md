@@ -18,12 +18,6 @@ DB_USER=root
 DB_PASS=
 
 ```
-
-### Starts server on localhost:3000
-```
-npm run start
-```
-
 ### Compile front build
 ```
 cd front
@@ -31,6 +25,13 @@ npm install
 npm run build
 This will store it in a dist folder that the server will access and display
 ```
+
+### Starts server on localhost:3000
+```
+npm run start
+```
+
+
 
 ### To run some tests on the api
 ```
