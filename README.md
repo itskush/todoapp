@@ -25,5 +25,6 @@ npm run start
 ### Compiles front end work and minifies for production
 ```
 cd front
+npm install
 npm run build
 ```
