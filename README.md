@@ -1,26 +1,29 @@
-# lofi-tune
+# To do App
 
 ## Project setup
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
+## Create Env file in root folder
 ```
-npm run serve
+Set up env variables for DB example
+
+DB_HOST='127.0.0.1'
+DB_PORT='3306'
+DB_NAME='tasks'
+DB_USER=root
+DB_PASS=
+
+```
+
+### Starts server on localhost:3000
+```
+npm run start
 ```
 
 ### Compiles and minifies for production
 ```
+cd front
 npm run build
 ```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
-
-Lofi-tune youtube.
