@@ -22,7 +22,7 @@ DB_PASS=
 npm run start
 ```
 
-### Compiles and minifies for production
+### Compiles front end work and minifies for production
 ```
 cd front
 npm run build
