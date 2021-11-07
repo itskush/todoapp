@@ -19,7 +19,8 @@
     "mysql2": "^2.3.3-rc.0",
     "pg": "^8.7.1",
     "sequelize": "^6.9.0",
-    "serve-static": "^1.14.1"
+    "serve-static": "^1.14.1",
+    "vue-cli": "^2.9.6"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
