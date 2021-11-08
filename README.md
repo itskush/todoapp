@@ -1,6 +1,7 @@
 # To do App
 ````
 Follow steps below to run application
+Live example at https://its-todo.herokuapp.com/
 ````
 ## Project setup
 ```
