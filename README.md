@@ -20,10 +20,7 @@ DB_PASS=
 ```
 ### Compile front build
 ```
-cd front
-npm install
 npm run build
-This will store it in a dist folder that the server will access and display
 ```
 
 ### Starts server on localhost:3000
